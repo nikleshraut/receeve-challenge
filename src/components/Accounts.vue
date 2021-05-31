@@ -8,8 +8,12 @@
               <input type="text" class="form-control" v-model="filter" placeholder="Filter" @keydown="$event.stopImmediatePropagation()">
           </div>
       </div>
-      <datatable :columns="accounts.columns" :data="accounts.data" :filter="filter" :per-page="10" />
-      <datatable-pager v-model="page"></datatable-pager>
+      <datatable :columns="accounts.columns" :data="accounts.data" :filter="filter" :per-page="10" >
+        <template v-slot:item.action="{ item }">
+          <v-icon small class="mr-2" @click="claimDetails(item)">edit</v-icon>
+        </template>
+      </datatable>
+      <datatable-pager class="d-flex justify-content-center pt-4" v-model="page" type="short"></datatable-pager>
     </div>
   </div>
 </template>
@@ -33,6 +37,19 @@ import Component from 'vue-class-component'
 import axios from 'axios'
 import { VuejsDatatableFactory } from 'vuejs-datatable';
 Vue.use( VuejsDatatableFactory );
+// VuejsDatatableFactory.useDefaultType( false )
+//     .registerTableType( 'datatable', tableType => tableType.mergeSettings( {
+//         pager: {
+//             classes: {
+//                 pager:    'pagination text-center',
+//                 selected: 'active',
+//             },
+//             icons: {
+//                 next:     '<i class="fas fa-chevron-right" title="Next page">>></i>',
+//                 previous: '<i class="fas fa-chevron-left" title="Previous page"><<</i>',
+//             },
+//         },
+//     } ) );
 @Component({})
 export default {
   created() {
@@ -47,10 +64,14 @@ export default {
       { label: 'Name', field: 'name' },
       { label: 'Address', field: 'address' },
       { label: 'Mobile', field: 'mobile' },
-      { label: 'Email', field: 'email' }
+      { label: 'Email', field: 'email' },
+      { label: 'Claims', field: 'claim' , interpolate:true}
     ];
   },
   methods:{
+      claimDetails: function (item) {
+        console.log(item);
+      },
       getClaims: function (){
         axios.get("http://localhost:9001/claims")
         .then( (response) => {
@@ -73,7 +94,8 @@ export default {
               name: `${elem.debtor.title} ${elem.debtor.firstName} ${elem.debtor.firstName}`,
               address: `${elem.debtor.address.address}, ${elem.debtor.address.city},  ${elem.debtor.address.state}, ${elem.debtor.address.zip}, ${elem.debtor.address.country}`,
               mobile: elem.debtor.mobilePhone,
-              email: elem.debtor.email
+              email: elem.debtor.email,
+              claim: `<a href='/#/dashboard'>Claims</a>`
             })
           });
         })
