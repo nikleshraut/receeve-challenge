@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1>Accounts</h1>
-    <div class="row">
+    <div class="">
       <div class="col-sm-3 form-inline p-4">
           <div class="form-group">
               <label for="filter" class="sr-only">Filter</label>
@@ -37,19 +37,6 @@ import Component from 'vue-class-component'
 import axios from 'axios'
 import { VuejsDatatableFactory } from 'vuejs-datatable';
 Vue.use( VuejsDatatableFactory );
-// VuejsDatatableFactory.useDefaultType( false )
-//     .registerTableType( 'datatable', tableType => tableType.mergeSettings( {
-//         pager: {
-//             classes: {
-//                 pager:    'pagination text-center',
-//                 selected: 'active',
-//             },
-//             icons: {
-//                 next:     '<i class="fas fa-chevron-right" title="Next page">>></i>',
-//                 previous: '<i class="fas fa-chevron-left" title="Previous page"><<</i>',
-//             },
-//         },
-//     } ) );
 @Component({})
 export default {
   created() {
@@ -58,32 +45,18 @@ export default {
   mounted() {
     console.log('Dashboard mounted')
     this.getAccounts();
-    this.getClaims();
     this.accounts.columns = [
-      { label: 'id', field: 'id', filterable: false },
-      { label: 'Name', field: 'name' },
-      { label: 'Address', field: 'address' },
-      { label: 'Mobile', field: 'mobile' },
-      { label: 'Email', field: 'email' },
-      { label: 'Claims', field: 'claim' , interpolate:true}
+      { label: 'id', field: 'id', filterable: false,align:'center' },
+      { label: 'Name', field: 'name' ,align:'center'},
+      { label: 'Address', field: 'address' ,align:'center'},
+      { label: 'Mobile', field: 'mobile' ,align:'center'},
+      { label: 'Email', field: 'email' ,align:'center'},
+      { label: 'Claims', field: 'claim' , interpolate:true,align:'center'}
     ];
   },
   methods:{
       claimDetails: function (item) {
         console.log(item);
-      },
-      getClaims: function (){
-        axios.get("http://localhost:9001/claims")
-        .then( (response) => {
-          this.claims = response.data
-        })
-        .catch(function (error) {
-          // handle error
-          console.log(error);
-        })
-        .then(function () {
-          // always executed
-        });
       },
       getAccounts: function (){
         axios.get("http://localhost:9001/accounts")
@@ -95,7 +68,7 @@ export default {
               address: `${elem.debtor.address.address}, ${elem.debtor.address.city},  ${elem.debtor.address.state}, ${elem.debtor.address.zip}, ${elem.debtor.address.country}`,
               mobile: elem.debtor.mobilePhone,
               email: elem.debtor.email,
-              claim: `<a href='/#/dashboard'>Claims</a>`
+              claim: `<a href='/#/account-claims/${elem.id}'>Account Claims</a>`
             })
           });
         })
@@ -110,7 +83,6 @@ export default {
     },
   data() {
     return {
-      claims: [],
       accounts: {columns:[], data:[]},
       filter: "",
       page: 1
