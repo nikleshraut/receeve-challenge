@@ -1,31 +1,31 @@
 <template>
-  <div class="challenge">
-    <img id="company-logo" alt="Vue logo" src="./assets/logo.png">
-    <Challenge msg="Welcome to the challenge 🐰"/>
+  <div id="app">
+    <div class="row">
+      <div class="col-sm-12">
+        <b-navbar toggleable="lg" type="dark" variant="info">
+          <b-navbar-brand href="#"><router-link to="dashboard"><span class="dashboard-menu">Dashboard</span></router-link></b-navbar-brand>
+          <b-navbar-brand href="#"><router-link to="accounts">Accounts</router-link></b-navbar-brand>
+        </b-navbar>
+      </div>
+      <div class="col-sm-12">
+        <router-view></router-view>
+      </div>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
-import Challenge from './components/Challenge.vue'
-import { Component, Vue } from "vue-property-decorator";
 
-@Component({ components: { Challenge } })
-export default class App extends Vue {
-  mounted(): void {
-    console.log("let's go")
-  }
+export default {
+  name: 'app'
 }
 </script>
-
 <style>
-.challenge {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+.navbar a{
+  color: #343a40;
+  text-decoration: none;
 }
-
-#company-logo {
-  width: 120px;
+.dashboard-menu {
+  padding-left:20px;
 }
 </style>
