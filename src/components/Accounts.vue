@@ -31,13 +31,11 @@
     color: #fff;
   }
 </style>
-<script lang="ts">
+<script>
 import Vue from 'vue'
-import Component from 'vue-class-component'
 import axios from 'axios'
 import { VuejsDatatableFactory } from 'vuejs-datatable';
 Vue.use( VuejsDatatableFactory );
-@Component({})
 export default {
   created() {
     console.log('Accounts created!')

@@ -53,12 +53,10 @@
   </div>
 </template>
 
-<script lang="ts">
+<script>
 import Vue from 'vue'
-import Component from 'vue-class-component'
 import { mdbLineChart, mdbContainer } from "mdbvue";
 import axios from 'axios';
-@Component({})
 export default {
     name: 'dashboard',
     components: {

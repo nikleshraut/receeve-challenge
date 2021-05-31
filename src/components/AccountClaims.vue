@@ -48,13 +48,11 @@
     cursor: pointer;
   }
 </style>
-<script lang="ts">
+<script>
 import Vue from 'vue'
-import Component from 'vue-class-component'
 import axios from 'axios'
 import { VuejsDatatableFactory } from 'vuejs-datatable';
 Vue.use( VuejsDatatableFactory );
-@Component({})
 export default {
   mounted() {
     this.getAccounts();
