@@ -63,11 +63,11 @@ export default {
       mdbLineChart,
       mdbContainer
     },
-    created() {
-      console.log('Dashboard created')
-    },
     mounted() {
-      console.log('Dashboard mounted')
+      const receeve_user = localStorage.getItem('receeve_user');
+      if(!receeve_user){
+        this.$router.push({ name: "Login"});
+      }
       this.getClaims();
 
     },
@@ -92,26 +92,28 @@ export default {
         axios.get("http://localhost:9001/claims")
         .then( (response) => {
           response.data.sort(function(a,b){
-            return new Date(b.dueDate) - new Date(a.dueDate);
+            return new Date(a.dueDate) - new Date(b.dueDate);
           });
-
+          const feesAmount = {};
           const monthWise = response.data.reduce((acc, cur) => {
             const dueDate = new Date(cur.dueDate);
             const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul","Aug", "Sep", "Oct", "Nov", "Dec"];
             const indexKey = `${monthNames[dueDate.getMonth()]} ${dueDate.getFullYear()}`
-            acc[indexKey] = acc[indexKey] + parseInt(cur.fees/100) || parseInt(cur.fees/100);
+            acc[indexKey] = acc[indexKey] + parseInt(cur.baseAmount/100) || parseInt(cur.baseAmount/100);
+            feesAmount[indexKey] = feesAmount[indexKey] + parseInt(cur.fees/100) || parseInt(cur.fees/100);
             return acc;
           }, {});
           this.lineChartData.labels = Object.keys(monthWise);
           this.lineChartData.datasets[0].data = Object.values(monthWise);
+          this.lineChartData.datasets[1].data = Object.values(feesAmount);
 
           response.data.map((elem)=>{
             if(elem.status === 'OPEN'){
-              this.openClaims.push(elem.fees/100);
+              this.openClaims.push(elem.baseAmount/100);
             }else if(elem.status === 'PAID'){
-              this.paidClaims.push(elem.fees/100);
+              this.paidClaims.push(elem.baseAmount/100);
             }else if(elem.status === 'DELETED'){
-              this.deletedClaims.push(elem.fees/100);
+              this.deletedClaims.push(elem.baseAmount/100);
             }
           });
         })
@@ -133,9 +135,16 @@ export default {
           labels: [],
           datasets: [
             {
-              label: "Montly Claims",
+              label: "Monthly Claims Amount",
               backgroundColor: "rgba(255, 99, 132, 0.1)",
               borderColor: "rgba(255, 99, 132, 1)",
+              borderWidth: 0.7,
+              data: []
+            },
+            {
+              label: "Monthly Claims Fees",
+              backgroundColor: "rgba( 0, 0,255, 0.1)",
+              borderColor: "rgba(0, 0,255, 1)",
               borderWidth: 0.7,
               data: []
             }

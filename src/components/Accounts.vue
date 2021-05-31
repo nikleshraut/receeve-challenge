@@ -37,11 +37,11 @@ import axios from 'axios'
 import { VuejsDatatableFactory } from 'vuejs-datatable';
 Vue.use( VuejsDatatableFactory );
 export default {
-  created() {
-    console.log('Accounts created!')
-  },
   mounted() {
-    console.log('Dashboard mounted')
+    const receeve_user = localStorage.getItem('receeve_user');
+    if(!receeve_user){
+      this.$router.push({ name: "Login"});
+    }
     this.getAccounts();
     this.accounts.columns = [
       { label: 'id', field: 'id', filterable: false,align:'center' },

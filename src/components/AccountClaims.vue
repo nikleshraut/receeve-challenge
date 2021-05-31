@@ -28,7 +28,13 @@
       <datatable :columns="claims.columns" :data="claims.data" :filter="filter" :per-page="10"></datatable>
       <datatable-pager class="d-flex justify-content-center pt-4" v-model="page" type="short"></datatable-pager>
     </div>
-    <div><h3 class="text-primary share-link"><span @click="shareLink()">Share ></span></h3></div>
+    <div class="row">
+      <div class="col-6">
+        <h3 class="text-default share-link"><span @click="backToAccount()">Back</span></h3></div>
+      </div>
+      <div class="col-6">
+        <h3 class="text-primary share-link"><span @click="shareLink()">Share</span></h3></div>
+      </div>
   </div>
 </template>
 <style>
@@ -55,6 +61,10 @@ import { VuejsDatatableFactory } from 'vuejs-datatable';
 Vue.use( VuejsDatatableFactory );
 export default {
   mounted() {
+    const receeve_user = localStorage.getItem('receeve_user');
+    if(!receeve_user){
+      this.$router.push({ name: "Login"});
+    }
     this.getAccounts();
     this.accountId = this.$route.params.id;
     this.claims.columns = [
@@ -68,6 +78,9 @@ export default {
   },
 
   methods:{
+      backToAccount: function() {
+        this.$router.push({ name: "Accounts"});
+      },
       shareLink: function (){
         var tempInput = document.createElement("input");
         tempInput.value = window.location.href;
